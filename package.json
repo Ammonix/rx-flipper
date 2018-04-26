@@ -1,0 +1,20 @@
+{
+  "name": "rx-flipper",
+  "version": "1.0.0",
+  "description": "bit flipper",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ammonix/rx-flipper.git"
+  },
+  "keywords": ["rx", "js", "bit"],
+  "author": "ammonix <joan.kuenzler@gmail.com> (https://ammonix.ch)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ammonix/rx-flipper/issues"
+  },
+  "homepage": "https://github.com/ammonix/rx-flipper#readme"
+}
