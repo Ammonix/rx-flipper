@@ -8,15 +8,21 @@ const data$ = fromEvent<Buffer>(fs.createReadStream('files/in/bin'), 'data');
 
 const bits$ = data$.pipe(
   map(i => new BitStream(i)),
-  mergeMap(bs => {
+  map(bs => {
     const bits = [];
     for (let i = 0; i < bs.length; i++) {
       bits.push(bs.readBoolean());
     }
-    return from(bits);
+    return bits;
   })
 );
 
-const filpped$ = bits$.pipe(map(i => !i));
+const filpped$ = bits$.pipe(map(i => i.map(b => !b)));
 
-filpped$.subscribe(console.log);
+filpped$.subscribe(i => {
+  const bs = new BitStream(new ArrayBuffer(i.length / 8));
+  i.forEach(i => bs.writeBoolean(i));
+  const ws = fs.createWriteStream('files/out/bin');
+  ws.write(bs.buffer);
+  ws.end();
+});
