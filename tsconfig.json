@@ -1,8 +1,10 @@
 {
   "paths": ["src"],
   "compilerOptions": {
-    "outFile": "dist/index.js",
+    "outDir": "dist/",
     "noImplicitAny": true,
-    "target": "es5"
+    "target": "es5",
+    "moduleResolution": "node",
+    "module": "commonjs"
   }
 }

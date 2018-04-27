@@ -4,15 +4,19 @@
   "description": "bit flipper",
   "main": "dist/index.js",
   "scripts": {
-    "watch": "tsc -w",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "execute": "node dist/index.js",
+    "b:x": "tsc && node dist/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ammonix/rx-flipper.git"
   },
-  "keywords": ["rx", "js", "bit"],
+  "keywords": [
+    "rx",
+    "js",
+    "bit"
+  ],
   "author": "ammonix <joan.kuenzler@gmail.com> (https://ammonix.ch)",
   "license": "MIT",
   "bugs": {
@@ -20,6 +24,7 @@
   },
   "homepage": "https://github.com/ammonix/rx-flipper#readme",
   "dependencies": {
+    "@types/node": "^9.0.0",
     "typescript": "^2.8.3"
   }
 }
