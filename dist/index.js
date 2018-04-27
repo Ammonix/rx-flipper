@@ -1,23 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
-const fs = require("fs");
-// const bit$ = from([0, 0, 0, 1]);
-// bit$.pipe(map(i => !i)).subscribe(console.log);
-// const rs = fs.createReadStream('files/in/bin');
-// const data$ = fromEvent(rs, 'data').pipe(map((i: Buffer) => i.length));
-// data$.subscribe(console.log);
-// fs.open('files/in/bin', 'r', (error, fd) => {
-//   if (error) {
-//     console.error(error.message);
-//     return;
-//   }
-//   var buffer = new Buffer(100);
-//   fs.read(fd, buffer, 0, 100, 0, (err, num) => {
-//     console.dir(buffer.toString('utf8', 0, num));
-//   });
-// });
-const data$ = rxjs_1.fromEvent(fs.createReadStream('files/in/bin'), 'data').pipe(operators_1.tap(console.log));
-const bits$ = data$.pipe(operators_1.map(i => i.readInt8(0)));
-bits$.subscribe(console.log);
+const bit_buffer_1 = require("bit-buffer");
+// const data$ = fromEvent<Buffer>(
+//   fs.createReadStream('files/in/bin'),
+//   'data'
+// ).pipe(tap(console.log));
+// data$
+//   .pipe(
+//     // map(i => new BitStream(i)),
+//     map(i => new BitStreamCollection(i)),
+//     map(bs => {
+//       return bs.map()
+//       // return new Array(bs.length).map(_ => bs.readBoolean());
+//       // const bits = [];
+//       // for (let i = 0; i < bs.length; i++) {
+//       //   bits.push(bs.readBoolean());
+//       // }
+//       // return bits;
+//     })
+//   )
+//   .subscribe(console.log);
+class BitStreamCollection extends bit_buffer_1.BitStream {
+    [Symbol.iterator]() {
+        return {
+            next: _ => {
+                let value = undefined;
+                const done = this.bitsLeft === 0;
+                if (!done) {
+                    value = this.readBoolean();
+                }
+                return { done, value };
+            }
+        };
+    }
+}
+for (let i of new BitStreamCollection(new ArrayBuffer(1))) {
+    console.log('for of', i);
+}
+console.log('[0]', new BitStreamCollection(new ArrayBuffer(1))[0]);

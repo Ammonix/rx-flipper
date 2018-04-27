@@ -1,34 +1,45 @@
-import { from, fromEvent, bindNodeCallback } from 'rxjs';
+import { from, fromEvent, bindNodeCallback, of } from 'rxjs';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
 import * as fs from 'fs';
+import { BitStream, BitView } from 'bit-buffer';
 
-// const bit$ = from([0, 0, 0, 1]);
+// const data$ = fromEvent<Buffer>(
+//   fs.createReadStream('files/in/bin'),
+//   'data'
+// ).pipe(tap(console.log));
 
-// bit$.pipe(map(i => !i)).subscribe(console.log);
+// data$
+//   .pipe(
+//     // map(i => new BitStream(i)),
+//     map(i => new BitStreamCollection(i)),
+//     map(bs => {
+//       return bs.map()
+//       // return new Array(bs.length).map(_ => bs.readBoolean());
+//       // const bits = [];
+//       // for (let i = 0; i < bs.length; i++) {
+//       //   bits.push(bs.readBoolean());
+//       // }
+//       // return bits;
+//     })
+//   )
+//   .subscribe(console.log);
 
-// const rs = fs.createReadStream('files/in/bin');
+class BitStreamCollection extends BitStream implements Iterable<boolean> {
+  public [Symbol.iterator](): Iterator<boolean> {
+    return {
+      next: _ => {
+        let value = undefined;
+        const done = this.bitsLeft === 0;
+        if (!done) {
+          value = this.readBoolean();
+        }
+        return { done, value };
+      }
+    };
+  }
+}
 
-// const data$ = fromEvent(rs, 'data').pipe(map((i: Buffer) => i.length));
-
-// data$.subscribe(console.log);
-
-// fs.open('files/in/bin', 'r', (error, fd) => {
-//   if (error) {
-//     console.error(error.message);
-//     return;
-//   }
-//   var buffer = new Buffer(100);
-//   fs.read(fd, buffer, 0, 100, 0, (err, num) => {
-//     console.dir(buffer.toString('utf8', 0, num));
-//   });
-// });
-
-const data$ = fromEvent<Buffer>(
-  fs.createReadStream('files/in/bin'),
-  'data'
-).pipe(tap(console.log));
-
-const bits$ = data$.pipe(map(i => i.readInt8(0)));
-
-bits$.subscribe(console.log);
+for (let i of new BitStreamCollection(new ArrayBuffer(1))) {
+  console.log('for of', i);
+}
