@@ -25,6 +25,7 @@
   "homepage": "https://github.com/ammonix/rx-flipper#readme",
   "dependencies": {
     "@types/node": "^9.0.0",
+    "rxjs": "^6.0.0",
     "typescript": "^2.8.3"
   }
 }

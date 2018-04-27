@@ -1,10 +1,11 @@
 {
-  "paths": ["src"],
   "compilerOptions": {
     "outDir": "dist/",
     "noImplicitAny": true,
-    "target": "es5",
+    "target": "es2015",
     "moduleResolution": "node",
     "module": "commonjs"
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
