@@ -2,9 +2,11 @@
   "name": "rx-flipper",
   "version": "1.0.0",
   "description": "bit flipper",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node index.js"
+    "watch": "tsc -w",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/ammonix/rx-flipper/issues"
   },
-  "homepage": "https://github.com/ammonix/rx-flipper#readme"
+  "homepage": "https://github.com/ammonix/rx-flipper#readme",
+  "dependencies": {
+    "typescript": "^2.8.3"
+  }
 }

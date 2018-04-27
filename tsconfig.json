@@ -1,0 +1,8 @@
+{
+  "paths": ["src"],
+  "compilerOptions": {
+    "outFile": "dist/index.js",
+    "noImplicitAny": true,
+    "target": "es5"
+  }
+}
