@@ -1,40 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
+const fs = require("fs");
 const bit_buffer_1 = require("bit-buffer");
-// const data$ = fromEvent<Buffer>(
-//   fs.createReadStream('files/in/bin'),
-//   'data'
-// ).pipe(tap(console.log));
-// data$
-//   .pipe(
-//     // map(i => new BitStream(i)),
-//     map(i => new BitStreamCollection(i)),
-//     map(bs => {
-//       return bs.map()
-//       // return new Array(bs.length).map(_ => bs.readBoolean());
-//       // const bits = [];
-//       // for (let i = 0; i < bs.length; i++) {
-//       //   bits.push(bs.readBoolean());
-//       // }
-//       // return bits;
-//     })
-//   )
-//   .subscribe(console.log);
-class BitStreamCollection extends bit_buffer_1.BitStream {
-    [Symbol.iterator]() {
-        return {
-            next: _ => {
-                let value = undefined;
-                const done = this.bitsLeft === 0;
-                if (!done) {
-                    value = this.readBoolean();
-                }
-                return { done, value };
-            }
-        };
+const data$ = rxjs_1.fromEvent(fs.createReadStream('files/in/bin'), 'data').pipe(operators_1.tap(console.log));
+const bits$ = data$.pipe(operators_1.map(i => new bit_buffer_1.BitStream(i)), operators_1.mergeMap(bs => {
+    const bits = [];
+    for (let i = 0; i < bs.length; i++) {
+        bits.push(bs.readBoolean());
     }
-}
-for (let i of new BitStreamCollection(new ArrayBuffer(1))) {
-    console.log('for of', i);
-}
-console.log('[0]', new BitStreamCollection(new ArrayBuffer(1))[0]);
+    return rxjs_1.from(bits);
+}));
+const filpped$ = bits$.pipe(operators_1.map(i => !i));
+filpped$.subscribe(console.log);
